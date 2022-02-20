@@ -95,6 +95,7 @@ func (c *Controller) DoLogin(userName string, password string) (gwtToken string,
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
 // @Failure      401      {object}  httputil.HTTPError
+// @Failure      403      {object}  httputil.HTTPError
 // @Security     ApiKeyAuth
 // @Router       /user/logout [post]
 func (c *Controller) Logout(ctx *gin.Context) {
@@ -170,6 +171,7 @@ func (c *Controller) LogoutAll(ctx *gin.Context) {
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
 // @Failure      401      {object}  httputil.HTTPError
+// @Failure      403      {object}  httputil.HTTPError
 // @Security     ApiKeyAuth
 // @Router       /user/{id} [get]
 func (c *Controller) ShowUser(ctx *gin.Context) {
@@ -180,6 +182,9 @@ func (c *Controller) ShowUser(ctx *gin.Context) {
 	if err != nil {
 		httputil.NewError(ctx, http.StatusForbidden, err)
 		return
+	}
+	if id == "" {
+		id = userId
 	}
 	// can be viewed by themselves or by admin
 	if userId != id {
@@ -235,6 +240,7 @@ func (c *Controller) AddUser(ctx *gin.Context) {
 // @Failure      404      {object}  httputil.HTTPError
 // @Failure      500      {object}  httputil.HTTPError
 // @Failure      401      {object}  httputil.HTTPError
+// @Failure      403      {object}  httputil.HTTPError
 // @Security     ApiKeyAuth
 // @Router       /user/{id} [patch]
 func (c *Controller) UpdateUser(ctx *gin.Context) {
@@ -276,6 +282,8 @@ func (c *Controller) UpdateUser(ctx *gin.Context) {
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
 // @Failure      401      {object}  httputil.HTTPError
+// @Failure      403      {object}  httputil.HTTPError
+// @Failure      403      {object}  httputil.HTTPError
 // @Security     ApiKeyAuth
 // @Router       /user/{id} [delete]
 func (c *Controller) DeleteUser(ctx *gin.Context) {

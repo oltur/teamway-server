@@ -23,6 +23,7 @@ import (
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
 // @Failure      401      {object}  httputil.HTTPError
+// @Failure      403      {object}  httputil.HTTPError
 // @Security     ApiKeyAuth
 // @Router       /test-taken [post]
 func (c *Controller) TakeTest(ctx *gin.Context) {
@@ -81,7 +82,7 @@ func (c *Controller) TakeTest(ctx *gin.Context) {
 // @Failure      400  {object}  httputil.HTTPError
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
-// @Failure      401      {object}  httputil.HTTPError
+// @Failure      403      {object}  httputil.HTTPError
 // @Security     ApiKeyAuth
 // @Router       /test-taken [get]
 func (c *Controller) GetTestResult(ctx *gin.Context) {

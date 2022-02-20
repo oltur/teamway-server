@@ -63,6 +63,7 @@ func (c *Controller) ListTests(ctx *gin.Context) {
 // @Failure      404      {object}  httputil.HTTPError
 // @Failure      500      {object}  httputil.HTTPError
 // @Failure      401      {object}  httputil.HTTPError
+// @Failure      403      {object}  httputil.HTTPError
 // @Security     ApiKeyAuth
 // @Router       /test [post]
 func (c *Controller) AddTest(ctx *gin.Context) {
@@ -98,6 +99,7 @@ func (c *Controller) AddTest(ctx *gin.Context) {
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
 // @Failure      401      {object}  httputil.HTTPError
+// @Failure      403      {object}  httputil.HTTPError
 // @Security     ApiKeyAuth
 // @Router       /test/{id} [delete]
 func (c *Controller) DeleteTest(ctx *gin.Context) {

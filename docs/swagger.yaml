@@ -185,6 +185,10 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/httputil.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
         "404":
           description: Not Found
           schema:
@@ -224,8 +228,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/httputil.HTTPError'
-        "401":
-          description: Unauthorized
+        "403":
+          description: Forbidden
           schema:
             $ref: '#/definitions/httputil.HTTPError'
         "404":
@@ -276,6 +280,10 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/httputil.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
         "404":
           description: Not Found
           schema:
@@ -313,6 +321,10 @@ paths:
             $ref: '#/definitions/httputil.HTTPError'
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "403":
+          description: Forbidden
           schema:
             $ref: '#/definitions/httputil.HTTPError'
         "404":
@@ -420,6 +432,10 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/httputil.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
         "404":
           description: Not Found
           schema:
@@ -456,6 +472,10 @@ paths:
             $ref: '#/definitions/httputil.HTTPError'
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "403":
+          description: Forbidden
           schema:
             $ref: '#/definitions/httputil.HTTPError'
         "404":
@@ -495,6 +515,10 @@ paths:
             $ref: '#/definitions/httputil.HTTPError'
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "403":
+          description: Forbidden
           schema:
             $ref: '#/definitions/httputil.HTTPError'
         "404":
@@ -566,6 +590,10 @@ paths:
             $ref: '#/definitions/httputil.HTTPError'
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "403":
+          description: Forbidden
           schema:
             $ref: '#/definitions/httputil.HTTPError'
         "404":
