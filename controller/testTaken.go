@@ -9,8 +9,62 @@ import (
 	"github.com/oltur/teamway-server/model"
 )
 
-// TakeTest godoc
-// @Summary      Take a test
+// GetNextQuestion godoc
+// @Summary      Gets next question
+// @Description  Gets next unanswered question for a given test, or NoContent if there is none left
+// @Tags         Take Test
+// @Accept       json
+// @Produce      json
+// @Param        test-id     query     string     true  "Test Id"
+// @Success      200  {string}  string "" Question
+// @Success      204  {string}  string
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Failure      401      {object}  httputil.HTTPError
+// @Failure      403      {object}  httputil.HTTPError
+// @Security     ApiKeyAuth
+// @Router       /test-taken/next [get]
+func (c *Controller) GetNextQuestion(ctx *gin.Context) {
+	var err error
+	userId, err := c.getUserIdFromContext(ctx)
+	if err != nil {
+		httputil.NewError(ctx, http.StatusForbidden, err)
+		return
+	}
+	testId := ctx.Query("test-id")
+
+	id := model.NewTestTakenId(types.Id(testId), userId)
+
+	test, err := model.TestOne(id.TestID)
+	if err != nil {
+		httputil.NewError(ctx, http.StatusNotFound, err)
+		return
+	}
+
+	testTaken, err := model.TestTakenOneOrInsert(id)
+	if err != nil {
+		httputil.NewError(ctx, http.StatusNotFound, err)
+		return
+	}
+
+	res := ""
+	for _, question := range test.Questions {
+		if _, ok := testTaken.Answers[question.Title]; !ok {
+			res = question.Title
+			break
+		}
+	}
+
+	if res != "" {
+		ctx.JSON(http.StatusOK, res)
+	} else {
+		ctx.JSON(http.StatusNoContent, "")
+	}
+}
+
+// AnswerQuestion godoc
+// @Summary      Answer a question
 // @Description  Saves an answer for a given question in a given test
 // @Tags         Take Test
 // @Accept       json
@@ -26,7 +80,7 @@ import (
 // @Failure      403      {object}  httputil.HTTPError
 // @Security     ApiKeyAuth
 // @Router       /test-taken [post]
-func (c *Controller) TakeTest(ctx *gin.Context) {
+func (c *Controller) AnswerQuestion(ctx *gin.Context) {
 	var err error
 	userId, err := c.getUserIdFromContext(ctx)
 	if err != nil {
@@ -78,7 +132,7 @@ func (c *Controller) TakeTest(ctx *gin.Context) {
 // @Produce      json
 // @Param        test-id     query     string     true  "Test Id"
 // @Success      200  {object}  model.TestTaken
-// @Success      204  {string}  string
+// @Success      202  {string}  string
 // @Failure      400  {object}  httputil.HTTPError
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
@@ -121,9 +175,9 @@ func (c *Controller) GetTestResult(ctx *gin.Context) {
 		} else {
 			res = test.NegativeResult
 		}
+		ctx.JSON(http.StatusOK, res)
 	} else {
-		res = "Test is not finished"
+		res = "Not all questions are answered"
+		ctx.JSON(http.StatusAccepted, res)
 	}
-
-	ctx.JSON(http.StatusOK, res)
 }

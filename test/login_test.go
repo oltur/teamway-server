@@ -15,10 +15,11 @@ import (
 )
 
 func TestLoginOk(t *testing.T) {
+	model.InitModel()
 	router, _ := controller.SetupRouter()
 	w := httptest.NewRecorder()
-	model.UserLogout("1")
-	reqBody := `{"userName":"User #1, Seller", "password": "1"}`
+
+	reqBody := `{"userName":"User1", "password": "1"}`
 	req, _ := http.NewRequest("POST", "/api/v1/user/login", strings.NewReader(reqBody))
 	router.ServeHTTP(w, req)
 
@@ -37,9 +38,10 @@ func TestLoginOk(t *testing.T) {
 }
 
 func TestLoginFailed(t *testing.T) {
+	model.InitModel()
 	router, _ := controller.SetupRouter()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/api/v1/product/999", nil)
+	req, _ := http.NewRequest("GET", "/api/v1/test/999", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 404, w.Code)

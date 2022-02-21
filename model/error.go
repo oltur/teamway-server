@@ -14,7 +14,6 @@ var (
 	ErrUnauthorized            = errors.New("'Authorization' is required Header")
 	ErrIdExists                = errors.New("this ID already exists")
 	ErrUserNameExists          = errors.New("user with given name already exists")
-	ErrActiveSessionExists     = errors.New("there is already an active session using your account. Use /user/logout/all API to drop it")
 	ErrInvalidTestTitle        = errors.New("invalid test title")
 	ErrInvalidQuestionTitle    = errors.New("invalid question title")
 	ErrInvalidAnswerTitle      = errors.New("invalid answer title")
@@ -30,4 +29,5 @@ var (
 	ErrAnswersDoNotMatchTest   = errors.New("there are too many answers or answered questions or answers do not match test questions")
 	ErrDuplicateQuestion       = errors.New("duplicate question")
 	ErrDuplicateAnswer         = errors.New("duplicate answer")
+	ErrInvalidToken            = errors.New("invalid auth token")
 )

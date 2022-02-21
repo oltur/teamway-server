@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -41,7 +40,7 @@ func (c *Controller) Auth() gin.HandlerFunc {
 		userId, token, expires, err := c.validateGwt(gwtToken)
 		if err != nil {
 			err = model.ErrCannotValidateUserToken
-			httputil.NewError(ctx, http.StatusInternalServerError, err)
+			httputil.NewError(ctx, http.StatusBadRequest, err)
 			ctx.Abort()
 			return
 		}
@@ -93,31 +92,37 @@ func (c *Controller) createGwt(userId string, token string, expires int64) (res 
 }
 
 func (c *Controller) validateGwt(gwtToken string) (userId string, token string, expires int64, err error) {
-	// sample token string taken from the New example
 	key, err := c.getKey()
 	binKey := []byte(key)
 
 	t, err := jwt.Parse(gwtToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, model.ErrInvalidToken
 		}
 
 		return binKey, nil
 	})
 
+	if t == nil {
+		err = model.ErrInvalidToken
+		return
+	}
+
 	if claims, ok := t.Claims.(jwt.MapClaims); ok && t.Valid {
-		i, err := strconv.ParseInt(claims["expires"].(string), 10, 64)
+		var i int64
+		i, err = strconv.ParseInt(claims["expires"].(string), 10, 64)
 		if err != nil {
-			return "", "", 0, nil
+			return
 		}
 
 		userId = claims["userId"].(string)
 		token = claims["token"].(string)
 		expires = i
 
-		return userId, token, expires, nil
+		return
 	} else {
-		return "", "", 0, nil
+		err = model.ErrInvalidToken
+		return
 	}
 }
 

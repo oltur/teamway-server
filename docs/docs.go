@@ -218,7 +218,7 @@ const docTemplate_swagger = `{
                 "tags": [
                     "Take Test"
                 ],
-                "summary": "Take a test",
+                "summary": "Answer a question",
                 "parameters": [
                     {
                         "type": "string",
@@ -247,6 +247,79 @@ const docTemplate_swagger = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.TestTaken"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/test-taken/next": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Gets next unanswered question for a given test, or NoContent if there is none left",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Take Test"
+                ],
+                "summary": "Gets next question",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Test Id",
+                        "name": "test-id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": " Question",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -552,64 +625,6 @@ const docTemplate_swagger = `{
                     },
                     "404": {
                         "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/httputil.HTTPError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/httputil.HTTPError"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/logout/all": {
-            "post": {
-                "description": "Logs current user ouy of all sessions",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Log out all user's sessions",
-                "parameters": [
-                    {
-                        "description": "Login Request",
-                        "name": "credentials",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.LoginRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Ok",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/httputil.HTTPError"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/httputil.HTTPError"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
                         "schema": {
                             "$ref": "#/definitions/httputil.HTTPError"
                         }

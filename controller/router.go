@@ -26,14 +26,14 @@ func SetupRouter() (*gin.Engine, *Controller) {
 		testTaken := v1.Group("/test-taken")
 		{
 			testTaken.Use(c.Auth())
-			testTaken.POST("", c.TakeTest)
+			testTaken.GET("/next", c.GetNextQuestion)
+			testTaken.POST("", c.AnswerQuestion)
 			testTaken.GET("", c.GetTestResult)
 		}
 		user := v1.Group("/user")
 		{
 			user.POST("", c.AddUser)
 			user.POST("/login", c.Login)
-			user.POST("/logout/all", c.LogoutAll)
 			user.POST("/logout", c.Auth(), c.Logout)
 			user.GET(":id", c.Auth(), c.ShowUser)
 			user.DELETE(":id", c.Auth(), c.DeleteUser)

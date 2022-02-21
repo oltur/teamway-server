@@ -32,12 +32,10 @@ func (c *Controller) Login(ctx *gin.Context) {
 		httputil.NewError(ctx, http.StatusBadRequest, err)
 		return
 	}
-	gwtToken, tokenExpires, err := c.DoLogin(req.UserName, req.Password)
+	gwtToken, tokenExpires, userId, err := c.DoLogin(req.UserName, req.Password)
 	if err != nil {
 		if errors.Is(err, model.ErrNotFound) {
 			httputil.NewError(ctx, http.StatusNotFound, err)
-		} else if errors.Is(err, model.ErrActiveSessionExists) {
-			httputil.NewError(ctx, http.StatusConflict, err)
 		} else {
 			httputil.NewError(ctx, http.StatusInternalServerError, err)
 		}
@@ -47,31 +45,27 @@ func (c *Controller) Login(ctx *gin.Context) {
 	res := &model.LoginResponse{
 		Token:        gwtToken,
 		TokenExpires: tokenExpires,
+		UserId:       string(userId),
 	}
 
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (c *Controller) DoLogin(userName string, password string) (gwtToken string, tokenExpires int64, err error) {
+func (c *Controller) DoLogin(userName string, password string) (gwtToken string, tokenExpires int64, userId types.Id, err error) {
 	user, err := model.GetUserByCredentials(userName, password)
 	if err != nil {
 		err = model.ErrNotFound
-		return "", 0, err
+		return
 	}
 
 	token := xid.New().String()
 	tokenExpires = time.Now().Add(30 * 24 * time.Hour).UnixMilli()
+	userId = user.ID
 
 	gwtToken, err = c.createGwt(string(user.ID), token, tokenExpires)
 	if err != nil {
 		err = model.ErrCannotGenerateUserToken
-		return "", 0, err
-	}
-
-	now := time.Now().UnixMilli()
-	if user.Token != "" && user.TokenExpires >= now {
-		err = model.ErrActiveSessionExists
-		return "", 0, err
+		return
 	}
 
 	user.Token = token
@@ -79,9 +73,9 @@ func (c *Controller) DoLogin(userName string, password string) (gwtToken string,
 
 	err = model.UserSave(user)
 	if err != nil {
-		return "", 0, err
+		return
 	}
-	return gwtToken, tokenExpires, err
+	return
 }
 
 // Logout godoc
@@ -118,45 +112,6 @@ func (c *Controller) Logout(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusNoContent, "Ok")
-}
-
-// LogoutAll godoc
-// @Summary      Log out all user's sessions
-// @Description  Logs current user ouy of all sessions
-// @Tags         User
-// @Accept       json
-// @Produce      json
-// @Param		 credentials body	model.LoginRequest true  "Login Request"
-// @Success      204  {string}  string "Ok"
-// @Failure      400  {object}  httputil.HTTPError
-// @Failure      404  {object}  httputil.HTTPError
-// @Failure      409  {object}  httputil.HTTPError
-// @Failure      500  {object}  httputil.HTTPError
-// @Router       /user/logout/all [post]
-func (c *Controller) LogoutAll(ctx *gin.Context) {
-	var err error
-	var req model.LoginRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		httputil.NewError(ctx, http.StatusBadRequest, err)
-		return
-	}
-	user, err := model.GetUserByCredentials(req.UserName, req.Password)
-	if err != nil {
-		err = model.ErrNotFound
-		httputil.NewError(ctx, http.StatusNotFound, err)
-		return
-	}
-
-	user.Token = ""
-	user.TokenExpires = 0
-
-	err = model.UserSave(user)
-	if err != nil {
-		httputil.NewError(ctx, http.StatusInternalServerError, err)
-		return
-	}
-
-	ctx.JSON(http.StatusNotFound, "Ok")
 }
 
 // ShowUser godoc

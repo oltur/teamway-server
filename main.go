@@ -17,6 +17,7 @@ var version string
 // http://www.swagger.io/support
 // @contact.email  olturua@gmail.com
 
+// @version 0
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
@@ -34,5 +35,8 @@ func main() {
 
 	docs.SwaggerInfo_swagger.Version = s
 	r, _ := controller.SetupRouter()
-	r.Run(":8081")
+	err := r.Run(":8081")
+	if err != nil {
+		panic(err)
+	}
 }

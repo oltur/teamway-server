@@ -294,7 +294,55 @@ paths:
             $ref: '#/definitions/httputil.HTTPError'
       security:
       - ApiKeyAuth: []
-      summary: Take a test
+      summary: Answer a question
+      tags:
+      - Take Test
+  /test-taken/next:
+    get:
+      consumes:
+      - application/json
+      description: Gets next unanswered question for a given test, or NoContent if
+        there is none left
+      parameters:
+      - description: Test Id
+        in: query
+        name: test-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ' Question'
+          schema:
+            type: string
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: Gets next question
       tags:
       - Take Test
   /test/{id}:
@@ -607,44 +655,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Logout
-      tags:
-      - User
-  /user/logout/all:
-    post:
-      consumes:
-      - application/json
-      description: Logs current user ouy of all sessions
-      parameters:
-      - description: Login Request
-        in: body
-        name: credentials
-        required: true
-        schema:
-          $ref: '#/definitions/model.LoginRequest'
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: Ok
-          schema:
-            type: string
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/httputil.HTTPError'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/httputil.HTTPError'
-        "409":
-          description: Conflict
-          schema:
-            $ref: '#/definitions/httputil.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/httputil.HTTPError'
-      summary: Log out all user's sessions
       tags:
       - User
   /utils/ping:
