@@ -144,7 +144,7 @@ func init() {
 	fmt.Printf("Test1 id: %s\n", test1.ID)
 
 	addTestReq = &AddTestRequest{
-		Title: "Are you an introvert or an extrovert?",
+		Title: "Sample test",
 		Questions: []*Question{
 			{
 				Title: "Question #1",
