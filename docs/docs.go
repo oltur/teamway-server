@@ -4,7 +4,7 @@ package docs
 
 import "github.com/swaggo/swag"
 
-const docTemplate_swagger = `{
+const docTemplate = `{
     "schemes": {{ marshal .Schemes }},
     "swagger": "2.0",
     "info": {
@@ -170,8 +170,8 @@ const docTemplate_swagger = `{
                             "$ref": "#/definitions/model.TestTaken"
                         }
                     },
-                    "204": {
-                        "description": "No Content",
+                    "202": {
+                        "description": "Accepted",
                         "schema": {
                             "type": "string"
                         }
@@ -1050,18 +1050,18 @@ const docTemplate_swagger = `{
     }
 }`
 
-// SwaggerInfo_swagger holds exported Swagger Info so clients can modify it
-var SwaggerInfo_swagger = &swag.Spec{
-	Version:          "",
+// SwaggerInfo holds exported Swagger Info so clients can modify it
+var SwaggerInfo = &swag.Spec{
+	Version:          "0",
 	Host:             "localhost:8081",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "Teamway test task: Server",
 	Description:      "This is a Teamway test task: Server, based on celler example.",
 	InfoInstanceName: "swagger",
-	SwaggerTemplate:  docTemplate_swagger,
+	SwaggerTemplate:  docTemplate,
 }
 
 func init() {
-	swag.Register(SwaggerInfo_swagger.InstanceName(), SwaggerInfo_swagger)
+	swag.Register(SwaggerInfo.InstanceName(), SwaggerInfo)
 }

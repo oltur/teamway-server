@@ -129,6 +129,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
   title: 'Teamway test task: Server'
+  version: "0"
 paths:
   /test:
     get:
@@ -220,8 +221,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.TestTaken'
-        "204":
-          description: No Content
+        "202":
+          description: Accepted
           schema:
             type: string
         "400":

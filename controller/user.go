@@ -46,6 +46,7 @@ func (c *Controller) Login(ctx *gin.Context) {
 		Token:        gwtToken,
 		TokenExpires: tokenExpires,
 		UserId:       string(userId),
+		UserName:     req.UserName,
 	}
 
 	ctx.JSON(http.StatusOK, res)
