@@ -1,5 +1,8 @@
 # Teamway test task: Server
 
+Please pay attention:
+* The client is in another repository: https://github.com/oltur/teamway-client
+
 Generate doc
 
 ```console
