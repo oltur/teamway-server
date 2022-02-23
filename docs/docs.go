@@ -136,6 +136,56 @@ const docTemplate = `{
                 }
             }
         },
+        "/test-by-title/{title}": {
+            "get": {
+                "description": "get test by title",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Test By Title"
+                ],
+                "summary": "ShowTestByTitle",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Test title",
+                        "name": "title",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Test"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/test-taken": {
             "get": {
                 "security": [
@@ -167,7 +217,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.TestTaken"
+                            "type": "string"
                         }
                     },
                     "202": {
@@ -357,7 +407,7 @@ const docTemplate = `{
         },
         "/test/{id}": {
             "get": {
-                "description": "get string by ID",
+                "description": "get test by ID",
                 "consumes": [
                     "application/json"
                 ],

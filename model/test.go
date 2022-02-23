@@ -41,6 +41,16 @@ func TestOne(id types.Id) (res *Test, err error) {
 	return nil, ErrNotFound
 }
 
+func TestOneByTitle(title string) (res *Test, err error) {
+	for k, v := range testsByIds {
+		if title == v.Title {
+			res = testsByIds[k]
+			return
+		}
+	}
+	return nil, ErrNotFound
+}
+
 //// TestSave Internal use only
 //func TestSave(req *Test) (err error) {
 //	testsByIds[req.ID] = req

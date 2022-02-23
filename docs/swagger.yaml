@@ -203,6 +203,39 @@ paths:
       summary: Add test
       tags:
       - Test
+  /test-by-title/{title}:
+    get:
+      consumes:
+      - application/json
+      description: get test by title
+      parameters:
+      - description: Test title
+        in: path
+        name: title
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Test'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: ShowTestByTitle
+      tags:
+      - Test By Title
   /test-taken:
     get:
       consumes:
@@ -220,7 +253,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.TestTaken'
+            type: string
         "202":
           description: Accepted
           schema:
@@ -392,7 +425,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: get string by ID
+      description: get test by ID
       parameters:
       - description: Test ID
         in: path

@@ -33,7 +33,7 @@ func main() {
 		s = "(DEVELOPMENT BUILD)"
 	}
 
-	docs.SwaggerInfo_swagger.Version = s
+	docs.SwaggerInfo.Version = s
 	r, _ := controller.SetupRouter()
 	err := r.Run(":8081")
 	if err != nil {

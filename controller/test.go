@@ -10,7 +10,7 @@ import (
 
 // ShowTest godoc
 // @Summary      Show a test
-// @Description  get string by ID
+// @Description  get test by ID
 // @Tags         Test
 // @Accept       json
 // @Produce      json
@@ -24,6 +24,29 @@ func (c *Controller) ShowTest(ctx *gin.Context) {
 	s := ctx.Param("id")
 	id := types.Id(s)
 	test, err := model.TestOne(id)
+	if err != nil {
+		httputil.NewError(ctx, http.StatusNotFound, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, test)
+}
+
+// ShowTestByTitle godoc
+// @Summary      ShowTestByTitle
+// @Description  get test by title
+// @Tags         Test By Title
+// @Accept       json
+// @Produce      json
+// @Param        title   path      string  true  "Test title"
+// @Success      200  {object}  model.Test
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /test-by-title/{title} [get]
+func (c *Controller) ShowTestByTitle(ctx *gin.Context) {
+	s := ctx.Param("title")
+	title := s
+	test, err := model.TestOneByTitle(title)
 	if err != nil {
 		httputil.NewError(ctx, http.StatusNotFound, err)
 		return

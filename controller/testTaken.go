@@ -131,7 +131,7 @@ func (c *Controller) AnswerQuestion(ctx *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        test-id     query     string     true  "Test Id"
-// @Success      200  {object}  model.TestTaken
+// @Success      200  {string}  string
 // @Success      202  {string}  string
 // @Failure      400  {object}  httputil.HTTPError
 // @Failure      404  {object}  httputil.HTTPError

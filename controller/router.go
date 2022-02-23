@@ -46,6 +46,10 @@ func SetupRouter() (*gin.Engine, *Controller) {
 			test.POST("", c.Auth(), c.AddTest)
 			test.DELETE(":id", c.Auth(), c.DeleteTest)
 		}
+		testByTitle := v1.Group("/test-by-title")
+		{
+			testByTitle.GET(":title", c.ShowTestByTitle)
+		}
 		tools := v1.Group("/utils")
 		{
 			tools.GET("/ping", c.Ping)
