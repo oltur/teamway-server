@@ -66,25 +66,22 @@ func doTakeTestOk(router *gin.Engine, test *model.Test, gwtToken string) (result
 		req, _ := http.NewRequest("GET", url, nil)
 		req.Header.Add("Authorization", "Bearer "+gwtToken)
 		router.ServeHTTP(w, req)
-		if w.Code == 204 {
-			break
-		}
 		if w.Code != 200 {
 			err = fmt.Errorf("unexpected http code")
 			return
 		}
 		body := w.Body.String()
-		var nextQuestion string
-		err = json.Unmarshal([]byte(body), &nextQuestion)
+		var getNextQuestionResponse model.GetNextQuestionResponse
+		err = json.Unmarshal([]byte(body), &getNextQuestionResponse)
 		if err != nil {
 			return
 		}
 
-		if nextQuestion == "" {
+		if getNextQuestionResponse.TestFinished {
 			break
 		}
 
-		firstAnswer := findQuestion(test.Questions, nextQuestion).Answers[0]
+		firstAnswer := findQuestion(test.Questions, getNextQuestionResponse.Question).Answers[0]
 
 		// check interim result (202)
 		w = httptest.NewRecorder()
@@ -100,7 +97,7 @@ func doTakeTestOk(router *gin.Engine, test *model.Test, gwtToken string) (result
 		// answer
 		w = httptest.NewRecorder()
 		url = fmt.Sprintf("/api/v1/test-taken?test-id=%s&question-title=%s&answer-title=%s",
-			string(test.ID), neturl.QueryEscape(nextQuestion), neturl.QueryEscape(firstAnswer.Title))
+			string(test.ID), neturl.QueryEscape(getNextQuestionResponse.Question), neturl.QueryEscape(firstAnswer.Title))
 		req, _ = http.NewRequest("POST", url, nil)
 		req.Header.Add("Authorization", "Bearer "+gwtToken)
 		router.ServeHTTP(w, req)
@@ -142,25 +139,22 @@ func doTakeTestFailWrongAnswer(router *gin.Engine, test *model.Test, gwtToken st
 		req, _ := http.NewRequest("GET", url, nil)
 		req.Header.Add("Authorization", "Bearer "+gwtToken)
 		router.ServeHTTP(w, req)
-		if w.Code == 204 {
-			break
-		}
 		if w.Code != 200 {
 			err = fmt.Errorf("unexpected http code")
 			return
 		}
 		body := w.Body.String()
-		var nextQuestion string
-		err = json.Unmarshal([]byte(body), &nextQuestion)
+		var getNextQuestionResponse model.GetNextQuestionResponse
+		err = json.Unmarshal([]byte(body), &getNextQuestionResponse)
 		if err != nil {
 			return
 		}
 
-		if nextQuestion == "" {
+		if getNextQuestionResponse.TestFinished {
 			break
 		}
 
-		firstAnswer := findQuestion(test.Questions, nextQuestion).Answers[0]
+		firstAnswer := findQuestion(test.Questions, getNextQuestionResponse.Question).Answers[0]
 
 		// check interim result (202)
 		w = httptest.NewRecorder()
@@ -176,7 +170,7 @@ func doTakeTestFailWrongAnswer(router *gin.Engine, test *model.Test, gwtToken st
 		// answer
 		w = httptest.NewRecorder()
 		url = fmt.Sprintf("/api/v1/test-taken?test-id=%s&question-title=%s&answer-title=%s",
-			string(test.ID), neturl.QueryEscape(nextQuestion), neturl.QueryEscape(firstAnswer.Title+" !!!!! WRONG !!!!!"))
+			string(test.ID), neturl.QueryEscape(getNextQuestionResponse.Question), neturl.QueryEscape(firstAnswer.Title+" !!!!! WRONG !!!!!"))
 		req, _ = http.NewRequest("POST", url, nil)
 		req.Header.Add("Authorization", "Bearer "+gwtToken)
 		router.ServeHTTP(w, req)
