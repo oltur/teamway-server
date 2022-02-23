@@ -39,6 +39,17 @@ definitions:
       title:
         type: string
     type: object
+  model.GetNextQuestionResponse:
+    properties:
+      question:
+        type: string
+      questionNumber:
+        type: integer
+      testFinished:
+        type: boolean
+      totalQuestions:
+        type: integer
+    type: object
   model.LoginRequest:
     properties:
       password:
@@ -335,8 +346,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Gets next unanswered question for a given test, or NoContent if
-        there is none left
+      description: Gets next unanswered question and related information
       parameters:
       - description: Test Id
         in: query
@@ -347,13 +357,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: ' Question'
+          description: OK
           schema:
-            type: string
-        "204":
-          description: No Content
-          schema:
-            type: string
+            $ref: '#/definitions/model.GetNextQuestionResponse'
         "400":
           description: Bad Request
           schema:

@@ -339,7 +339,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Gets next unanswered question for a given test, or NoContent if there is none left",
+                "description": "Gets next unanswered question and related information",
                 "consumes": [
                     "application/json"
                 ],
@@ -361,15 +361,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": " Question",
+                        "description": "OK",
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/model.GetNextQuestionResponse"
                         }
                     },
                     "400": {
@@ -968,6 +962,23 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "model.GetNextQuestionResponse": {
+            "type": "object",
+            "properties": {
+                "question": {
+                    "type": "string"
+                },
+                "questionNumber": {
+                    "type": "integer"
+                },
+                "testFinished": {
+                    "type": "boolean"
+                },
+                "totalQuestions": {
+                    "type": "integer"
                 }
             }
         },

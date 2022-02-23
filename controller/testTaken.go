@@ -11,13 +11,12 @@ import (
 
 // GetNextQuestion godoc
 // @Summary      Gets next question
-// @Description  Gets next unanswered question for a given test, or NoContent if there is none left
+// @Description  Gets next unanswered question and related information
 // @Tags         Take Test
 // @Accept       json
 // @Produce      json
 // @Param        test-id     query     string     true  "Test Id"
-// @Success      200  {string}  string "" Question
-// @Success      204  {string}  string
+// @Success      200  {object}  model.GetNextQuestionResponse
 // @Failure      400  {object}  httputil.HTTPError
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
@@ -48,19 +47,21 @@ func (c *Controller) GetNextQuestion(ctx *gin.Context) {
 		return
 	}
 
-	res := ""
+	res := &model.GetNextQuestionResponse{
+		TestFinished:   true,
+		Question:       "",
+		TotalQuestions: len(test.Questions),
+		QuestionNumber: -1,
+	}
 	for _, question := range test.Questions {
+		res.QuestionNumber = res.QuestionNumber + 1
 		if _, ok := testTaken.Answers[question.Title]; !ok {
-			res = question.Title
+			res.TestFinished = false
+			res.Question = question.Title
 			break
 		}
 	}
-
-	if res != "" {
-		ctx.JSON(http.StatusOK, res)
-	} else {
-		ctx.JSON(http.StatusNoContent, "")
-	}
+	ctx.JSON(http.StatusOK, res)
 }
 
 // AnswerQuestion godoc
